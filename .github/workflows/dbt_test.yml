@@ -1,0 +1,117 @@
+name: DBT Test
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  dbt-check:
+    runs-on: ubuntu-latest
+    env:
+      S3_BUCKET: book-recomendation
+      S3_FILES: BX-Books.csv,BX-Book-Ratings.csv
+      S3_FILES_ENCODING: cp1251
+      STAGING_TABLE_NAMES: Book,Rating
+      OUTPUT_DIR: raw-data
+      PROFILE: dev
+      AWS_REGION: eu-north-1
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          sudo apt-get update
+          sudo apt-get install -y make
+
+      - name: Export secrets to .env
+        run: |
+          echo "S3_BUCKET=$S3_BUCKET" >> .env
+          echo "S3_FILES=$S3_FILES" >> .env
+          echo "S3_FILES_ENCODING=$S3_FILES_ENCODING" >> .env
+          echo "STAGING_TABLE_NAMES=$STAGING_TABLE_NAMES" >> .env
+          echo "OUTPUT_DIR=$OUTPUT_DIR" >> .env
+          echo "PROFILE=$PROFILE" >> .env
+
+      - name: Download data
+        run: make download
+
+      - name: Run DBT models
+        run: make dbt-run
+
+      - name: Run DBT tests
+        run: make dbt-test
+
+      - name: Build DBT Docs
+        run: make dbt-docs
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Upload DBT Docs to S3
+        run: |
+          aws s3 sync target s3://book-recommend-dbt-doc
+
+      - name: Save DuckDB file as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dev-duckdb
+          path: reports/sources/books/book_rating.duckdb
+
+  evidence-report:
+    needs: dbt-check
+    runs-on: ubuntu-latest
+    env:
+      AWS_REGION: eu-north-1
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Download DuckDB artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dev-duckdb
+          path: reports/sources/books/
+
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install Evidence dependencies
+        run: npm --prefix reports install
+
+
+      - name: Export secrets to .env
+        run: |
+          echo "PROFILE=dev" >> .env        
+
+      - name: Build Evidence site
+        run: make evidence
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Upload to S3
+        run: |
+          aws s3 sync reports/build s3://book-recommend
+
+      

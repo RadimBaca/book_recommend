@@ -1,0 +1,16 @@
+.cursor/
+.vscode/
+target/
+dbt_packages/
+logs/
+reports/.evidence/template
+reports/.svelte-kit
+reports/build
+reports/node_modules
+reports/.DS_Store
+reports/static/data
+reports/*.options.yaml
+reports/.vscode/settings.json
+reports/.env
+reports/.evidence/meta
+reports/sources/books/book_rating.duckdb

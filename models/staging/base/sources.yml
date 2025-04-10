@@ -1,0 +1,6 @@
+sources:
+  - name: staging
+    schema: staging
+    tables:
+      - name: Book
+      - name: Rating

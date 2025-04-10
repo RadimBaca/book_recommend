@@ -1,0 +1,63 @@
+version: 2
+
+models:
+  - name: book_rating
+    description: "Book ratings by individual users. We join the ratings with books according to the ShortenedCleanedISBN."
+    columns:
+      - name: UserID
+        description: "ID of the user who rated the book"
+        data_type: integer
+      - name: LowerISBN
+        description: "Lowercase ISBN of the book"
+        data_type: string
+      - name: ShortenedCleanedISBN
+        description: "Shortened cleaned ISBN of the book. We keep just the first 9 digits of the cleaned ISBN. Cleaned ISBN is the ISBN without any non-numeric characters (except 'x' character if present)."
+        data_type: string
+      - name: BookTitle
+        description: "Title of the book"
+        data_type: string
+      - name: BookAuthor
+        description: "Author of the book"
+        data_type: string
+      - name: BookRating
+        description: "Rating of the book (values 1-10)"
+        data_type: integer
+        data_tests:
+          - not_null
+  - name: avg_book_rating
+    description: "Average book rating by individual users. it may happen that a user has rated the same book multiple times, so we take the average of the ratings."
+    columns:
+      - name: UserId
+        description: Id of a user
+        data_type: bigint
+        quote: true
+      - name: BookTitle
+        description: Book title
+        data_type: varchar
+        quote: true
+        data_tests:
+          - not_null
+      - name: BookAuthor
+        data_type: varchar
+        quote: true
+        description: The name of the author who wrote the book. This is a string field.
+        data_tests:
+          - not_null
+      - name: ShortenedCleanedISBN
+        data_type: varchar
+        quote: true
+        description: This column contains the shortened and cleaned version of the ISBN (International Standard Book Number) of the book. It is a unique identifier for books.
+        data_tests:
+          - not_null
+      - name: AvgRating
+        data_type: double
+        quote: true
+        description: The average rating given by a user to a specific book. This is calculated by taking the average of all ratings given by the user to the book.
+        data_tests:
+          - not_null
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - UserId
+            - ShortenedCleanedISBN
+    
