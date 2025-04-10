@@ -1,6 +1,7 @@
 # Řešení
 
 [Dokumentace vytvořené DBT pipeline](http://book-recommend-dbt-doc.s3-website.eu-north-1.amazonaws.com)
+
 [Evidence BI frontend](http://book-recommend.s3-website.eu-north-1.amazonaws.com)
 
 # Poznámky k výchozímu Python kódu
