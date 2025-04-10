@@ -1,3 +1,8 @@
+# Řešení
+
+    - [Dokumentace vytvořené DBT pipeline](http://book-recommend-dbt-doc.s3-website.eu-north-1.amazonaws.com)
+    - [Evidence BI frontend](http://book-recommend.s3-website.eu-north-1.amazonaws.com)
+
 # Poznámky k výchozímu Python kódu
 
 Kód po spuštění padá. Využití knihovny Pandas pro data engineering považuji za poněkud riskantní. Data jsou sice malá, ale je otázka, zda by se v produkci nemohla objevit data, která by přesahovala velikost hlavní paměti.  
@@ -16,6 +21,7 @@ V kódu a datech je několik problémů z pohledu kvality dat:
 8. Některé knihy se stejným `ISBN` se v `books` opakují (a jedna dokonce s jiným názvem). Je potřeba provést deduplikaci.
 9. Ve výsledku se objevují knihy, které byly hodnoceny méně než osmi různými lidmi, kteří četli "Pána prstenů". Je to způsobeno tím, že někteří hodnotili knihu vícekrát.
 10. Ke kódu by bylo vhodné připojit dokumentaci ke spuštění (stačí `README.md`) a `requirements.txt`.
+11. Z pohledu fungování vyhledávání se mi příliš nelíbí ta pevně daná hodnota 8. Nejsem úplně data analytik, ale při testování nebylo úplně lehké nalézt knihy, které měly dostatek společných čtenářů. 
 
 # Moje řešení
 
@@ -28,8 +34,8 @@ V kódu a datech je několik problémů z pohledu kvality dat:
     a) `download` – stažení CSV a uložení do databáze  
     b) `dbt-run` – spuštění DBT  
     c) `evidence` – sestavení reportu pomocí Evidence
-4. CSV data jsou stažena z mého S3 bucketu, kde jsem je v původní podobě umístil: https://book-recommendation.s3.amazonaws.com/
-5. Raw data jsou po stažení uložena do lokální DuckDB databáze ve schématu `staging`.
+4. CSV data jsou stažena z mého S3 bucketu, kde jsem CSV data v původní podobě umístil: https://book-recommendation.s3.amazonaws.com/
+5. Raw CSV data jsou po stažení uložena do lokální DuckDB databáze ve schématu `staging`.
 6. Do zdrojových dat jsem přidal časové razítko a údaj o zdroji dat.
 7. Snažil jsem se data co nejvíce vyčistit, deduplikovat a celou pipeline zjednodušit.
 8. Součástí řešení je i GitHub Action workflow, které má následující fáze:
@@ -48,7 +54,9 @@ venv\Scripts\activate
 pip install -r requirements.txt
 make download
 make dbt-run
-make evidence
+npm --prefix reports install
+npm --prefix reports run sources
+npm --prefix reports run dev
 ```
 
 ## Vedlejší poznámky k mému řešení

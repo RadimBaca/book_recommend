@@ -4,15 +4,22 @@ title: Welcome to Book Recomender
 
 <TextInput
     name=input_book
-    title="Book name"
+    title="Enter phrase searched in book names"
 />
 
-Searching for {inputs.input_book}
+<Slider
+    title="# common users treshold" 
+    name=input_treshold
+    min=0
+    max=30
+/>
 
-Books finded:
+Searching for '{inputs.input_book}'
+
+# Books finded
 <DataTable data={find_book}/>
 
-Books recommended to finded books
+# Recommended books
 <DataTable data={rec_book}/>
 
 ```sql find_book
@@ -35,7 +42,7 @@ JOIN books.avg_book_rating b ON a.UserID = b.UserID
 WHERE a.BookTitle LIKE lower('%${inputs.input_book}%')
   AND b.BookTitle != a.BookTitle
 GROUP BY b.BookTitle
-HAVING COUNT(distinct a.UserID) >= 8
+HAVING COUNT(distinct a.UserID) >= ${inputs.input_treshold}
 ORDER BY correlation DESC
 LIMIT 10
 ```
