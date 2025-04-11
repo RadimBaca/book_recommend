@@ -4,11 +4,11 @@ title: Welcome to Book Recomender
 
 <TextInput
     name=input_book
-    title="Enter phrase searched in book names"
+    title="Enter the exact book name"
 />
 
 <Slider
-    title="# common users treshold" 
+    title="# common users threshold" 
     name=input_treshold
     min=0
     max=30
@@ -16,7 +16,7 @@ title: Welcome to Book Recomender
 
 Searching for '{inputs.input_book}'
 
-# Books finded
+# Books found
 <DataTable data={find_book}/>
 
 # Recommended books
