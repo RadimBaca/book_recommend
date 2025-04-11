@@ -68,7 +68,9 @@ Používám jednotnou konvenci pojmenování – jednotlivé modely a jejich atr
 
 ## Výhody použití DBT, SQL a GITu
 
-1. Dokumentace celé pipeline v DBT
+![Data Lineage](img/data_lineage.jpg)
+
+1. Dokumentace celé pipeline v DBT (viz. obrázek)
 2. Verzování a do budoucna transparentní rozšiřování projektu pomocí GITu. Trval bych na tom, aby se dodatečné změny vždy nejprve implementovaly ve vlastní větvi.
 3. Testovatelnost celé pipeline (od začátku do konce) v DBT
 4. Grafická data lineage, která usnadňuje pochopení celého řešení v DBT. Data pipeline je jasně rozdělena do menších částí (modelů), které na sebe navazují.
