@@ -1,5 +1,5 @@
 ---
-title: Welcome to Book Recomender
+title: Welcome to Book Recommender
 ---
 
 <TextInput
