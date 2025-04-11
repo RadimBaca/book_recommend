@@ -73,7 +73,3 @@ Používám jednotnou konvenci pojmenování – jednotlivé modely a jejich atr
 3. Testovatelnost celé pipeline (od začátku do konce) v DBT
 4. Grafická data lineage, která usnadňuje pochopení celého řešení v DBT. Data pipeline je jasně rozdělena do menších částí (modelů), které na sebe navazují.
 5. Deklarativnost SQL zpřehledňuje celé řešení. SQL je klasický nástroj pro práci s daty s jasnými vstupy a výstupy.
-
-# Výhody zaměstnání Radima Bači
-
-Můžete se chlubit, že máte ve svých řadách docenta, který s daty pracuje už dvacet let. Může posloužit ke zvýšení prestiže a jako záruka vyšší kvality.

@@ -28,7 +28,7 @@ SELECT
     a.BookAuthor as "Book author",
     a.LowerISBN as "ISBN"
 FROM books.stg_normalized_book a
-WHERE a.BookTitle LIKE lower('%${inputs.input_book}%')
+WHERE a.BookTitle = lower('${inputs.input_book}')
 ```
 
 ```sql rec_book
@@ -39,7 +39,7 @@ SELECT
   count(distinct a.UserID) "# Readers who rated"
 FROM books.avg_book_rating a
 JOIN books.avg_book_rating b ON a.UserID = b.UserID
-WHERE a.BookTitle LIKE lower('%${inputs.input_book}%')
+WHERE a.BookTitle = lower('${inputs.input_book}')
   AND b.BookTitle != a.BookTitle
 GROUP BY b.BookTitle
 HAVING COUNT(distinct a.UserID) >= ${inputs.input_treshold}
