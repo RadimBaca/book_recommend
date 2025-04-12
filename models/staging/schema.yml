@@ -101,15 +101,15 @@ models:
         data_tests:
           - not_null
           - unique
-      - name: CleanedISBN
-        description: "Cleaned ISBN of the book. We keep just the digits of the ISBN and 'x' character if present."
-        data_type: string
-        data_tests:
-          - not_null
-          - unique
       - name: ShortenedCleanedISBN
-        description: "Shortened cleaned ISBN of the book. We keep just the first 9 digits of the cleaned ISBN."
+        description: "Shortened cleaned ISBN of the book. We keep just the digits of the ISBN and 'x' character if present. We keep just the first 9 digits of the cleaned ISBN."
         data_type: string
         data_tests:
           - not_null
           - unique
+      - name: NormBookTitle
+        description: "Normalized title of a book. All symbols except characters and numbers are removed"
+        data_type: string
+      - name: NormBookAuthor
+        description: "Normalized author of a book. We keep just frist and last part of the name"
+        data_type: string

@@ -33,15 +33,16 @@ WHERE a.BookTitle = lower('${inputs.input_book}')
 
 ```sql rec_book
 SELECT
-    b.BookTitle AS "Book title",
+    MAX(b.BookTitle) AS "Book title",
+    MAX(b.BookAuthor) AS "Book author",
     CORR(a.AvgRating, b.AvgRating) AS Correlation,
     avg(b.AvgRating) "Avg book rating",
   count(distinct a.UserID) "# Readers who rated"
 FROM books.avg_book_rating a
 JOIN books.avg_book_rating b ON a.UserID = b.UserID
 WHERE a.BookTitle = lower('${inputs.input_book}')
-  AND b.BookTitle != a.BookTitle
-GROUP BY b.BookTitle
+  AND b.NormBookTitle != a.NormBookTitle
+GROUP BY b.NormBookTitle
 HAVING COUNT(distinct a.UserID) >= ${inputs.input_treshold}
 ORDER BY correlation DESC
 LIMIT 10
