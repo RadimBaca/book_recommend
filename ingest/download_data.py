@@ -41,11 +41,18 @@ for file_name, staging_table_name in zip(file_names, staging_table_names):
                 select *, current_localtimestamp() ts, '{url}' source_url from read_csv('{output_path}',
                 header = true,
                 store_rejects = true,
+                escape = '\\',
                 rejects_table = '{staging_table_name}_reject_table',
                 rejects_scan= '{staging_table_name}_scan_table'
             )
             """)
+    
+    conn.sql(f"""
+            CREATE OR REPLACE TABLE staging.{staging_table_name}_reject_table as 
+                from {staging_table_name}_reject_table
+            """)
 
+    print("Imported into DB.")
 
 
 

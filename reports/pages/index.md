@@ -8,13 +8,13 @@ title: Welcome to Book Recommender
 />
 
 <Slider
-    title="# common users threshold" 
+    title="# common users" 
     name=input_treshold
     min=0
     max=30
 />
 
-Searching for '{inputs.input_book}'
+Searching for '{inputs.input_book}' and recommending books with {inputs.input_treshold} minimum number of common readers
 
 # Books found
 <DataTable data={find_book}/>
@@ -42,7 +42,8 @@ FROM books.avg_book_rating a
 JOIN books.avg_book_rating b ON a.UserID = b.UserID
 WHERE a.BookTitle = lower('${inputs.input_book}')
   AND b.NormBookTitle != a.NormBookTitle
-GROUP BY b.NormBookTitle
+  AND b.NormBookAuthor != a.NormBookAuthor
+GROUP BY b.NormBookTitle, a.NormBookAuthor
 HAVING COUNT(distinct a.UserID) >= ${inputs.input_treshold}
 ORDER BY correlation DESC
 LIMIT 10

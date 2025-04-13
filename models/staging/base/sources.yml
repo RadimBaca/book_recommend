@@ -4,3 +4,5 @@ sources:
     tables:
       - name: Book
       - name: Rating
+      - name: Book_reject_table
+      - name: Rating_reject_table
